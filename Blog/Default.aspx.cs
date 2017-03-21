@@ -19,11 +19,15 @@ namespace Blog
 
         protected void Button1_Click(object sender, EventArgs e)
         {
-            System.Collections.Specialized.ListDictionary listDictionary
-                = new System.Collections.Specialized.ListDictionary();
-            listDictionary.Add("Name", Name.Text);
-            listDictionary.Add("Password", Password.Text);
-            LinqDataSource1.Insert(listDictionary);
+            if (Name.Text == "" || Password.Text == "")
+            {
+                Label2.Text = "Не введен логин или пароль!";
+            }
+            else
+            {
+                SqlDataSource1.Insert();
+                Label2.Text = "Запись успешно добавлена!";
+            }
         }
     }
 }
