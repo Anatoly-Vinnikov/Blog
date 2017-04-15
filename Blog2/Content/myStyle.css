@@ -1,0 +1,22 @@
+﻿body {
+}
+
+.title {
+    font-size: large;
+}
+
+.text {
+
+}
+
+.info {
+    font-size: smaller;
+}
+
+.good {
+    color: green;
+}
+
+.bad {
+    color: red;
+}

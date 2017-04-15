@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using Blog2.Models;
+using Microsoft.AspNet.Identity;
 
 namespace Blog2.Controllers
 {
@@ -28,6 +29,7 @@ namespace Blog2.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Article article = db.Articles.Find(id);
+            //Comment comment = db.Comments.Find(id);
             if (article == null)
             {
                 return HttpNotFound();
@@ -50,6 +52,10 @@ namespace Blog2.Controllers
         {
             if (ModelState.IsValid)
             {
+                article.Creator = User.Identity.GetUserName();
+                article.CreationDate = DateTime.Now;
+                article.RatingGood = 0;
+                article.RatingBad = 0;
                 db.Articles.Add(article);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -122,6 +128,13 @@ namespace Blog2.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        public string GetUserName()
+        {
+            int articleId = Int32.Parse(Request.Url.ToString().Split('/')[3]);
+            Article article = db.Articles.Find(articleId);
+            return article.Creator;
         }
     }
 }
