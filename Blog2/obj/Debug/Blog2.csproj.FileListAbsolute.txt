@@ -79,4 +79,7 @@ c:\users\anato\documents\visual studio 2015\Projects\Blog2\Blog2\bin\Microsoft.O
 c:\users\anato\documents\visual studio 2015\Projects\Blog2\Blog2\bin\Microsoft.Owin.Security.MicrosoftAccount.xml
 c:\users\anato\documents\visual studio 2015\Projects\Blog2\Blog2\obj\Debug\Blog2.dll
 c:\users\anato\documents\visual studio 2015\Projects\Blog2\Blog2\obj\Debug\Blog2.pdb
+C:\Users\anato\documents\visual studio 2015\Projects\Blog2\Blog2\obj\Debug\Blog2.Migrations.InitialCreate.resources
+C:\Users\anato\documents\visual studio 2015\Projects\Blog2\Blog2\obj\Debug\Blog2.csproj.GenerateResource.Cache
+C:\Users\anato\documents\visual studio 2015\Projects\Blog2\Blog2\obj\Debug\Blog2.Migrations.Migr1.resources
 C:\Users\anato\documents\visual studio 2015\Projects\Blog2\Blog2\obj\Debug\Blog2.csprojResolveAssemblyReference.cache

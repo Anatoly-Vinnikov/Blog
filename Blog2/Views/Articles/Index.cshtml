@@ -14,17 +14,19 @@
 
 @foreach (var item in Model)
 {
-    <div class="title">
-        @Html.ActionLink(@Html.DisplayFor(modelItem => item.Title).ToString(), "Details", new { id = item.Id })
-    </div>
-    <div class="text">
-        @Html.DisplayFor(modelItem => item.Text)
-    </div>
-    <div class="info">
-        @Html.DisplayFor(modelItem => item.Creator) - 
-        @Html.DisplayFor(modelItem => item.CreationDate), &#9;
-        <span class ="good">@Html.DisplayFor(modelItem => item.RatingGood)</span> | 
-        <span class ="bad">@Html.DisplayFor(modelItem => item.RatingBad)</span> @{ Write("\t");}
+    <div class="my-content">
+        <div class="title">
+            @Html.ActionLink(@Html.DisplayFor(modelItem => item.Title).ToString(), "Details", new { id = item.Id })
+        </div>
+        <div class="text">
+            @Html.DisplayFor(modelItem => item.Text)
+        </div>
+        <div class="info">
+            @Html.DisplayFor(modelItem => item.Creator) -
+            @Html.DisplayFor(modelItem => item.CreationDate), &#9;
+            <span class="good">@Html.DisplayFor(modelItem => item.RatingGood)</span> |
+            <span class="bad">@Html.DisplayFor(modelItem => item.RatingBad)</span> @{ Write("\t");}
+        </div>
     </div>
     <br />
 }

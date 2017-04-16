@@ -28,16 +28,37 @@ namespace Blog2.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Article article = db.Articles.Find(id);
-            //Comment comment = db.Comments.Find(id);
-            if (article == null)
+            ArticleDetails artDet = new ArticleDetails();
+            artDet.Article = db.Articles.Find(id);
+            List<Comment> comments = new List<Comment>();
+            if (artDet.Article == null)
             {
                 return HttpNotFound();
             }
-            return View(article);
+            foreach (var comment in db.Comments)
+            {
+                if (comment.ArticleId == id)
+                    comments.Add(comment);
+            }
+            artDet.Comments = comments;
+            return View(artDet);
+        }
+
+        [HttpPost]
+        public ActionResult Details([Bind(Include = "Id,ArticleId,Creator,Text,CreationDate")] Article article)
+        {
+            Comment comment = new Comment();
+            //comment.ArticleId = id;
+            comment.CreationDate = DateTime.Now;
+            comment.Creator = User.Identity.GetUserName();
+            //comment.Text = CommentText;
+            db.Comments.Add(comment);
+            db.SaveChanges();
+            return Redirect(Request.RawUrl);
         }
 
         // GET: Articles/Create
+        [Authorize]
         public ActionResult Create()
         {
             return View();
@@ -135,6 +156,103 @@ namespace Blog2.Controllers
             int articleId = Int32.Parse(Request.Url.ToString().Split('/')[3]);
             Article article = db.Articles.Find(articleId);
             return article.Creator;
+        }
+
+        // GET: Articles/Like/5
+        [Authorize]
+        public ActionResult Like(int id)
+        {
+            Article article = db.Articles.Find(id);
+            if (article == null)
+            {
+                return HttpNotFound();
+            }
+            foreach (var rating in db.Ratings)
+            {
+                if (rating.Creator == User.Identity.GetUserName() && rating.ArticleId == id)
+                {
+                    if (rating.Like)
+                    {
+                        db.Ratings.Remove(rating);
+                        article.RatingGood--;
+                    }
+                    else//dislike
+                    {
+                        rating.Dislike = false;
+                        article.RatingBad--;
+                        rating.Like = true;
+                        article.RatingGood++;
+                    }
+                }
+            }
+            if (db.Entry(article).State == EntityState.Modified)
+            {
+                db.SaveChanges();
+                return Redirect("/Articles/Details/" + id);
+            }
+            Rating newRating = new Rating();
+            newRating.Like = true;
+            newRating.Dislike = false;
+            newRating.ArticleId = id;
+            newRating.Creator = User.Identity.GetUserName();
+            article.RatingGood++;
+            db.Ratings.Add(newRating);
+            db.Entry(article).State = EntityState.Modified;
+            db.SaveChanges();
+            return Redirect("/Articles/Details/" + id);
+        }
+
+        // GET: Articles/Dislike/5
+        [Authorize]
+        public ActionResult Dislike(int id)
+        {
+            Article article = db.Articles.Find(id);
+            if (article == null)
+            {
+                return HttpNotFound();
+            }
+            foreach (var rating in db.Ratings)
+            {
+                if (rating.Creator == User.Identity.GetUserName() && rating.ArticleId == id)
+                {
+                    if (rating.Dislike)
+                    {
+                        db.Ratings.Remove(rating);
+                        article.RatingBad--;
+                    }
+                    else//like
+                    {
+                        rating.Dislike = true;
+                        article.RatingGood--;
+                        rating.Like = false;
+                        article.RatingBad++;
+                    }
+                }
+            }
+            if (db.Entry(article).State == EntityState.Modified)
+            {
+                db.SaveChanges();
+                return Redirect("/Articles/Details/" + id);
+            }
+            Rating newRating = new Rating();
+            newRating.Like = false;
+            newRating.Dislike = true;
+            newRating.ArticleId = id;
+            newRating.Creator = User.Identity.GetUserName();
+            article.RatingBad++;
+            db.Ratings.Add(newRating);
+            db.Entry(article).State = EntityState.Modified;
+            db.SaveChanges();
+            return Redirect("/Articles/Details/" + id);
+        }
+
+        // GET: Articles/Ratings
+        public ActionResult Ratings()
+        {
+            var articles = db.Articles.ToList();
+            articles.Sort((a, b) => (a.RatingGood-a.RatingBad).CompareTo(b.RatingGood - b.RatingBad));
+            articles.Reverse();
+            return View(articles);
         }
     }
 }

@@ -20,3 +20,25 @@
 .bad {
     color: red;
 }
+
+.my-content {
+    margin-left: 80px;
+    margin-right: 80px;
+}
+
+.text-details {
+    font-size: x-large;
+}
+
+.info-details {
+    font-size: larger;
+}
+
+.text-comments {
+    
+}
+
+.separation-line {
+    height: 1px;
+    background-color: black;
+}

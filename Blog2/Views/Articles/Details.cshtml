@@ -1,72 +1,76 @@
 ﻿@using Microsoft.AspNet.Identity
-@model Blog2.Models.Article
+@model Blog2.Models.ArticleDetails
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = Model.Article.Title;
 }
 
-<h2>Details</h2>
+<link rel="stylesheet" type="text/css" href="~/Content/myStyle.css">
+
+<h2>@Model.Article.Title</h2>
 
 <div>
     <h4>Article</h4>
     <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Creator)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Creator)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Title)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Title)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Text)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Text)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.CreationDate)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.CreationDate)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.RatingGood)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.RatingGood)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.RatingBad)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.RatingBad)
-        </dd>
-
-    </dl>
+    <div class="my-content">
+        @Html.HiddenFor(modelItem => Model.Article.Id)
+        <div class="text-details">
+            @Html.DisplayFor(modelItem => Model.Article.Text)
+        </div>
+        <div class="info-details">
+            @Html.DisplayFor(modelItem => Model.Article.Creator) -
+            @Html.DisplayFor(modelItem => Model.Article.CreationDate), &#9;
+            <span class="good">@Html.DisplayFor(modelItem => Model.Article.RatingGood)</span> |
+            <span class="bad">@Html.DisplayFor(modelItem => Model.Article.RatingBad)</span> @{ Write("\t");}
+        </div>
+        <p>
+            @if (Request.IsAuthenticated && User.Identity.GetUserName() == Model.Article.Creator)
+            {
+                @Html.ActionLink("Edit", "Edit", new { id = Model.Article.Id })
+                Write(" | ");
+            }
+            @Html.ActionLink("Back to List", "Index") | 
+            @Html.ActionLink("Like", "Like", new { id = Model.Article.Id }) | 
+            @Html.ActionLink("Dislike", "Dislike", new { id = Model.Article.Id })
+        </p>
+        <br /><div class="separation-line"></div>
+        <h4>Comments</h4>
+        <div class="my-content">
+            <div class="text-comments">
+                @{
+                    if (Model.Comments.Count == 0)
+                    {
+                        Write("No comments.");<br />
+                    }
+                    else
+                    {
+                        foreach (var comment in Model.Comments)
+                        {
+                        @Html.DisplayFor(modelItem => comment.Text)<br />
+                        @Html.DisplayFor(modelItem => comment.Creator) Write(" - ");
+                        @Html.DisplayFor(modelItem => comment.CreationDate)
+                        <br />
+                        }
+                    }
+                    <br />
+                    if (Request.IsAuthenticated)
+                    {
+                        @Html.TextArea("CommentText", null, new { @class = "form-control" })
+                        <br />
+                        //<input type="submit" value="Create" class="btn btn-default" />
+                        <form method="post" action="">
+                            <input type="hidden" value="@Model.Article.Id" name="ArticleId" />
+                            <input type="hidden" value="@Model.Article.Id" name="ArticleId" />
+                            <input type="submit" value="Отправить" />
+                        </form>
+                    }
+                    else
+                    {
+                        Write("Please, "); @Html.ActionLink("Log in", "Login", "Account")
+                        Write(" or "); @Html.ActionLink("Register", "Register", "Account") Write(" to comment.");
+                    }
+                }
+            </div>
+        </div>
+    </div>
 </div>
-<p>
-    @if (Request.IsAuthenticated && User.Identity.GetUserName() == Model.Creator)
-    {
-        @Html.ActionLink("Edit", "Edit", new { id = Model.Id })
-        Write(" | ");
-        @*@Html.Action("GetUserName", "ArticlesController")*@
-    }
-    @Html.ActionLink("Back to List", "Index")
-</p>

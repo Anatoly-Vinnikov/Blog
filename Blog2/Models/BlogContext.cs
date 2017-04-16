@@ -10,5 +10,6 @@ namespace Blog2.Models
     {
         public DbSet<Article> Articles { get; set; }
         public DbSet<Comment> Comments { get; set; }
+        public DbSet<Rating> Ratings { get; set; }
     }
 }
