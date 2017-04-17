@@ -49,19 +49,18 @@
                         @Html.DisplayFor(modelItem => comment.Text)<br />
                         @Html.DisplayFor(modelItem => comment.Creator) Write(" - ");
                         @Html.DisplayFor(modelItem => comment.CreationDate)
-                        <br />
+                        <br /><br />
                         }
                     }
                     <br />
                     if (Request.IsAuthenticated)
                     {
-                        @Html.TextArea("CommentText", null, new { @class = "form-control" })
-                        <br />
-                        //<input type="submit" value="Create" class="btn btn-default" />
+                        Write("Your comment:");
                         <form method="post" action="">
                             <input type="hidden" value="@Model.Article.Id" name="ArticleId" />
-                            <input type="hidden" value="@Model.Article.Id" name="ArticleId" />
-                            <input type="submit" value="Отправить" />
+                            @Html.TextArea("CommentText", null, new { @class = "form-control" })
+                            <br />
+                            <input type="submit" value="Create" class="btn btn-default" />
                         </form>
                     }
                     else

@@ -48,10 +48,10 @@ namespace Blog2.Controllers
         public ActionResult Details([Bind(Include = "Id,ArticleId,Creator,Text,CreationDate")] Article article)
         {
             Comment comment = new Comment();
-            //comment.ArticleId = id;
+            comment.ArticleId = Int32.Parse(Request.Form["ArticleId"]);
             comment.CreationDate = DateTime.Now;
             comment.Creator = User.Identity.GetUserName();
-            //comment.Text = CommentText;
+            comment.Text = Request.Form["CommentText"];
             db.Comments.Add(comment);
             db.SaveChanges();
             return Redirect(Request.RawUrl);
@@ -149,13 +149,6 @@ namespace Blog2.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
-        }
-
-        public string GetUserName()
-        {
-            int articleId = Int32.Parse(Request.Url.ToString().Split('/')[3]);
-            Article article = db.Articles.Find(articleId);
-            return article.Creator;
         }
 
         // GET: Articles/Like/5
